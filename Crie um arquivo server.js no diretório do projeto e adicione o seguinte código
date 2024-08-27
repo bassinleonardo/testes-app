@@ -1,0 +1,25 @@
+const express = require('express');
+const app = express();
+const port = 3000;
+
+app.use(express.json()); // Middleware para interpretar JSON
+
+// Rota de exemplo
+app.get('/api/hello', (req, res) => {
+  res.json({ message: 'Hello, world!' });
+});
+
+// Rota para obter dados (GET)
+app.get('/api/data', (req, res) => {
+  res.json({ data: [1, 2, 3, 4, 5] });
+});
+
+// Rota para criar dados (POST)
+app.post('/api/data', (req, res) => {
+  const newData = req.body;
+  res.status(201).json({ message: 'Data created', data: newData });
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
