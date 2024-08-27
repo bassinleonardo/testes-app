@@ -1,0 +1,43 @@
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, Text, Button, FlatList } from 'react-native';
+
+const App = () => {
+  const [data, setData] = useState([]);
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/data')
+      .then((response) => response.json())
+      .then((data) => setData(data.data))
+      .catch((error) => console.error('Error:', error));
+  }, []);
+
+  const sendData = () => {
+    fetch('http://localhost:3000/api/data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ newItem: 'Novo Item' }),
+    })
+      .then((response) => response.json())
+      .then((result) => setMessage(result.message))
+      .catch((error) => console.error('Error:', error));
+  };
+
+  return (
+    <SafeAreaView>
+      <Text>Data from API:</Text>
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.toString()}
+        renderItem={({ item }) => <Text>{item}</Text>}
+      />
+      <Button title="Send Data" onPress={sendData} />
+      {message ? <Text>{message}</Text> : null}
+    </SafeAreaView>
+  );
+};
+
+export default App;
+
